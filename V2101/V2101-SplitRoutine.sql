@@ -1,0 +1,23 @@
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("1100","AXLE 1 ONLY");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("1122","AXLE 1 & AXLE 2");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("1133","AXLE (1*0.6) & AXLES (1*0.4) + 2");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("1166","AXLE 1 & AXLES 2 + 3");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("1177","AXLE (1*0.6) & AXLES (1*0.4) + 2 + 3");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("1221","N/S/AXLE1 + O/S/AXLE2 & O/S/AXLE1 + N/S/AXLE2");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("1661","N/S/AXLE1+O/S/AXLE2+O/S/AXLE3 & O/S/AXLE1+N/S/AXLE2+N/S/AXLE3");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("3113","AXLES (1*0.5) + N/S/2 & AXLES (1*0.5) + O/S/2
+3146,AXLES 1 + N/S/2 & AXLES 3 + O/S/2");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("3333","AXLES 1 + 2 & AXLES 1 + 2");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("3344","AXLES 1 + 2 & AXLE 3");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("3355","AXLES 1 + 2 & AXLES 1 + 3");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("3366","AXLES 1 + 2 & AXLES 2 + 3");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("3377","AXLES 1 + 2 & AXLES 1 + 2 + 3");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("33CC","AXLES 1 + 2 & AXLES 3 + 4");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("5522","AXLES 1 + 3 & AXLE 2");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("5566","AXLES 1 + 3 & AXLES 2 + 3");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("5577","AXLES 1 + 3 & AXLES 1 + 2 + 3");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("55AA","AXLES 1 + 3 & AXLES 2 + 4");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("7337","AXLES 1 + 2 + N/S/3 & AXLES 1 + 2 + O/S/3");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("7777","AXLES 1 + 2 + 3 & AXLES 1 + 2 + 3");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("9966","AXLES 1 + 4 & AXLES 2 + 3");
+INSERT INTO `SplitRoutine` (`RoutineId`, `Routine`) VALUES ("FFFF","AXLES 1 + 2 + 3 + 4 & AXLES 1 + 2 + 3 + 4");

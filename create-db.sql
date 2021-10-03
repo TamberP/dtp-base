@@ -74,3 +74,15 @@ CREATE TABLE IF NOT EXISTS BrakType
 	TypeId		INT NOT NULL UNIQUE,
 	Type		Text (64) NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS BrakRoute
+(
+	RoutineId	TEXT(3) NOT NULL UNIQUE,
+	"Routine"	TEXT (32) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS SplitRoutine
+(
+	RoutineId	Text (4) NOT NULL UNIQUE,
+	"Routine"	Text (64) NOT NULL
+);
