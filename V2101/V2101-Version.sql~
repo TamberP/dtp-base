@@ -1,1 +1,0 @@
-INSERT INTO `Version` (`Version`, `DateTimeOf`) VALUES ("V2101","05/10/21 00:00:00");
