@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS TrailerWeights
         Axle5Weight                   INT,
         Dummy                 	INT,
         TotalAxleWeight               INT,
-        DTpNumber                     Text (14)
+        DTpNumber                     Text (14) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS VehMake
@@ -65,6 +65,12 @@ CREATE TABLE IF NOT EXISTS VehType
 
 CREATE TABLE IF NOT EXISTS Version
  (
-        Version                   Text (20),
-        "Date of update"          DateTime
+        Version                   Text (20) NOT NULL,
+        "Date of update"          DateTime NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS BrakType
+(
+	TypeId		INT NOT NULL UNIQUE,
+	Type		Text (64) NOT NULL
 );

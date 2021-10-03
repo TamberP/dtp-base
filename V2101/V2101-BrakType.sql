@@ -1,0 +1,16 @@
+INSERT INTO `BrakType` (`TypeId`, `Type`) VALUES (1, "MECHANICAL");
+INSERT INTO `BrakType` (`TypeId`, `Type`) VALUES (2, "AIR ASSISTED MECHANICAL");
+INSERT INTO `BrakType` (`TypeId`, `Type`) VALUES (3, "HYDRAULICS");
+INSERT INTO `BrakType` (`TypeId`, `Type`) VALUES (4, "VACUUM HYDRAULIC");
+INSERT INTO `BrakType` (`TypeId`, `Type`) VALUES (5, "AIR HYDRAULIC");
+INSERT INTO `BrakType` (`TypeId`, `Type`) VALUES (6, "VACUUM");
+INSERT INTO `BrakType` (`TypeId`, `Type`) VALUES (7, "AIR");
+INSERT INTO `BrakType` (`TypeId`, `Type`) VALUES (8, "POWER HYDRAULIC");
+INSERT INTO `BrakType` (`TypeId`, `Type`) VALUES (9, "LOCK ACTUATOR");
+INSERT INTO `BrakType` (`TypeId`, `Type`) VALUES (10, "SPRING");
+INSERT INTO `BrakType` (`TypeId`, `Type`) VALUES (11, "ELECTRIC");
+INSERT INTO `BrakType` (`TypeId`, `Type`) VALUES (12, "AIR AND SPRING");
+INSERT INTO `BrakType` (`TypeId`, `Type`) VALUES (13, "AIR HYDRAULIC AND AIR");
+INSERT INTO `BrakType` (`TypeId`, `Type`) VALUES (14, "VAC OR AIR ASSISTED HYD");
+INSERT INTO `BrakType` (`TypeId`, `Type`) VALUES (15, "VAC/HYD ASSISTED MECH");
+INSERT INTO `BrakType` (`TypeId`, `Type`) VALUES (16, "AIR HYDRAULIC OR AIR");
