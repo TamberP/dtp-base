@@ -19,6 +19,31 @@ described thusly:
 At some point, I may make it work such that the database can be
 updated with the ministry's DTA files.
 
+# Licensing
+
+## The Database
+The contents of the V2101/DTA database are a product of the Department
+for Transport, and as such are public sector information licensed
+under the Open Government License v3.0.
+
+They are provided 'as-is', with no warranty, and the Department for
+Transport are not liable for any errors or omissions.
+
+For full terms, see:
+https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+
+The .sql files under V2101/ are created by myself as a simple
+transformation of the contents of the .dta files, under the terms of
+the OGL v3.0.
+
+The DTA-base.sqlite database is produced mechanically from these
+files, and is also licensed under the OGL v3.0
+
+## The Code
+
+[The code is provided under the terms of the AGPL v3.0 license, a copy
+of which is provided](LICENSE.md)
+
 
 # FAQ
 
@@ -27,6 +52,8 @@ updated with the ministry's DTA files.
 I wanted to try figure out what DTp number my truck might get, when I
 finally try to register it, and some idea of what plated weights it
 might get assigned.
+
+And then it spiralled from there.
 
 ## No, but... Why?
 
