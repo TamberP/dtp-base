@@ -33,6 +33,8 @@ def vehType(typeid):
 def dtp_trl_fetch(dtp_num):
     return db_curs.execute("SELECT * FROM TrailerWeights WHERE DTpNumber=(?);", (dtp_num,)).fetchone()
 
+# TODO: This needs to be able to return enough info that we can use it to figure out what questions to ask
+# and then -- from those answers -- pull in the correct data.
 def dtp_suffixes(dtp_suf):
     suffixes = []
     for suf in list(dtp_suf):
