@@ -118,8 +118,6 @@ class DTP_UI:
         self.srch_gvw = tk.StringVar()
 
 
-        ttk.Label(adv_search_frame, text="DTp Number").grid(row=1, column=1, sticky=(tk.W, tk.E))
-        ttk.Entry(adv_search_frame, width=8, textvariable=self.dtp_input).grid(row=1, column=2, sticky=tk.W)
         ttk.Label(adv_search_frame, text="Manufacturer").grid(row=2, column=1, sticky=(tk.W, tk.E))
         self.manufcombo = ttk.Combobox(adv_search_frame, width=20, textvariable=self.srch_manufacturer, state="readonly",
                      postcommand = self.update_manuflist)
@@ -129,9 +127,14 @@ class DTP_UI:
         ttk.Label(adv_search_frame, text="GVW (kg)").grid(row=4, column=1, sticky=(tk.W, tk.E))
         ttk.Entry(adv_search_frame, width=20, textvariable=self.srch_gvw).grid(row=4, column=2, sticky=(tk.W, tk.E))
 
-
+        ttk.Label(adv_search_frame, textvariable=self.resultcount).grid(row=19, column=1, sticky=tk.E)
+        ttk.Label(adv_search_frame, text="results found.").grid(row=19, column=2, sticky=(tk.W, tk.E))
 
         ttk.Button(adv_search_frame, text="Search", command=self.advancedsearch).grid(row=20, column=2, sticky=(tk.W, tk.E))
+
+        for child in adv_search_frame.winfo_children():
+            child.grid_configure(padx=5, pady=5)
+        adv_search_frame.columnconfigure(2, weight=1)
 
         ## Results frame
 
@@ -186,7 +189,7 @@ class DTP_UI:
 
         # Connect to the DB
         dtp.db_connect()
-        self.vehmakes = dtp.get_vehMakes(self.vehmakes, self.vehmakes_ids)
+        dtp.get_vehMakes(self.vehmakes, self.vehmakes_ids)
 
     def result_prev(self, *args):
         if(int(self.resultcount.get()) > 0):
@@ -290,6 +293,11 @@ class DTP_UI:
         if (len(self.srch_manufacturer.get()) > 0):
             manufid = str(self.vehmakes_ids[self.vehmakes.index(self.srch_manufacturer.get())])
             query.WHERE(str('MakeId="' + manufid + '"'))
+
+        if(len(self.srch_gvw.get()) > 0):
+            weight = int(self.srch_gvw.get())
+            query.WHERE(str('GVW_DesignWeight=' + str(weight/10)))
+
         tmp = dtp.db_curs.execute(str(query)).fetchall()
         results = []
         for row in tmp:
