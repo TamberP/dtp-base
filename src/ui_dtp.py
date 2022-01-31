@@ -4,6 +4,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import dtp_database as dtp
 import _sql_utils as sql
+import webbrowser as web
 
 class DTP_UI:
     result_index = 0
@@ -56,7 +57,9 @@ class DTP_UI:
         menubar.add_cascade(menu=menu_main, label='Main')
         menu_help=tk.Menu(menubar, name='help')
         menu_help.add_command(label='About', command=self.dtp_ui_about)
+        menu_help.add_command(label='Help', command=self.dtp_ui_help)
         menubar.add_cascade(menu=menu_help, label='Help')
+
 
         root_frame = ttk.Frame(root_win, padding="3 3 12 12", height=600, width=800)
         root_frame.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
@@ -320,9 +323,18 @@ class DTP_UI:
         dlg = tk.Toplevel(root_win)
         dlg.title("About dtp-base")
         ttk.Label(dlg, text="dtp-base: For searching through the DVSA's brake roller test procedure database.\nWritten by Tamber <tamber@furryhelix.co.uk>").grid(row=2, column=1, columnspan=3)
-        ttk.Label(dlg, text="DTP Database version:").grid(row=3, column=1)
-        ttk.Label(dlg, text=dtp.db_version()[0]).grid(row=3, column=2)
-        ttk.Button(dlg, text="Ok", command=dismiss).grid(row=4, column=2)
+
+        ttk.Label(dlg, text="Source is available at:").grid(row=3, column=1)
+        # Ugh. I hate that I'm hardcoding a colour here, but I can't
+        # find a pre-set label style that would apply.
+        link = ttk.Label(dlg, text="github.com/TamberP/dtp-base", cursor="hand2", foreground="blue2")
+        link.grid(row=3, column=2)
+        link.bind("<Button-1>", lambda e: web.open_new_tab("https://github.com/TamberP/dtp-base"))
+
+        ttk.Label(dlg, text="DTP Database version:").grid(row=4, column=1)
+        ttk.Label(dlg, text=dtp.db_version()[0]).grid(row=4, column=2)
+        ttk.Button(dlg, text="Ok", command=dismiss).grid(row=5, column=2)
+
         dlg.protocol("WM_DELETE_WINDOW", dismiss)
         dlg.transient(root_win)
         dlg.wait_visibility()
@@ -331,6 +343,19 @@ class DTP_UI:
         return
 
     def dtp_ui_help(self, *args):
+        def dismiss ():
+            dlg.grab_release()
+            dlg.destroy()
+
+        dlg = tk.Toplevel(root_win)
+        dlg.title("Help")
+        ttk.Label(dlg, text="Sorry. There's no help here yet. Maybe someday.").pack()
+        ttk.Button(dlg, text="Ok...", command=dismiss).pack()
+        dlg.protocol("WM_DELETE_WINDOW", dismiss)
+        dlg.transient(root_win)
+        dlg.wait_visibility()
+        dlg.grab_set()
+        dlg.wait_window()
         return
 
     def update_manuflist(self):
