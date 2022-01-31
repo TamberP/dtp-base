@@ -2,10 +2,22 @@
 
 import tkinter as tk
 import tkinter.ttk as ttk
-import dtp_database
+import dtp_database as dtp
 
 class DTP_UI:
     result_index = 0
+
+    typecodes = ('', '1C', '1D', '1S', '24', '25', '27', '2C', '2D', '2L', '2P', '2R', '2S', '2T',
+                 '34', '35', '37', '3A', '3C', '3D', '3L', '3P', '3R', '3S', '3T', '4A', '4D',
+                 '4L', '4P', '4R', '4S', '4T', 'SP')
+    typedesc = ('', '1 AXLE CENTRE DRAW-BAR', '1 AXLE DRAWBAR TRAILER', '1 AXLE SEMI-TRAILER', '2 AXLE CLASS IV',
+                '2 AXLE CLASS V', '2 AXLE CLASS VII', '2 AXLE CENTRE DRAW-BAR', '2 AXLE DRAWBAR TRAILER',
+                '2 AXLE LIGHT MOTOR CAR', '2 AXLE PSV', '2 AXLE RIGID HGV', '2 AXLE SEMI-TRAILER',
+                '2 AXLE TRACTOR UNIT', '3 AXLE CLASS IV', '3 AXLE CLASS V', '3 AXLE CLASS VII',
+                '3 AXLE ARTICULATED PSV', '3 AXLE CENTRE DRAW-BAR', '3 AXLE DRAWBAR TRAILER', '3 AXLE LIGHT MOTOR CAR',
+                '3 AXLE PSV', '3 AXLE RIGID HGV', '3 AXLE SEMI-TRAILER', '3 AXLE TRACTOR UNIT', '4 AXLE ARTICULATED PSV',
+                '4 AXLE DRAWBAR TRAILER', '4 AXLE LIGHT MOTOR CAR', '4 AXLE PSV', '4 AXLE RIGID HGV',
+                '4 AXLE SEMI-TRAILER', '4 AXLE TRACTOR UNIT', 'SPECIAL PURPOSE VEH/TR')
 
     def __init__(self, root_win):
         global result_dtp_disp
@@ -20,6 +32,8 @@ class DTP_UI:
         global result_ax5_disp
         global result_brk_rtn
         global index_disp
+        global srch_type
+
         root_win.title("dtp-base")
         menubar = tk.Menu(root_win)
         root_win['menu'] = menubar
@@ -44,6 +58,8 @@ class DTP_UI:
         n = ttk.Notebook(root_frame)
         search_frame=ttk.Frame(n)
         n.add(search_frame, text='Search')
+        adv_search_frame=ttk.Frame(n)
+        n.add(adv_search_frame, text='Advanced Search')
         results_frame=ttk.Frame(n)
         n.add(results_frame, text='Results')
         n.grid(sticky='nsew')
@@ -72,14 +88,30 @@ class DTP_UI:
         ttk.Button(search_frame, text="Go", command=self.dtp_numsearch).grid(column=3, row=1, sticky=tk.W)
 
         self.resultcount=tk.StringVar()
-
+        self.resultcount.set("0")
         ttk.Label(search_frame, textvariable=self.resultcount).grid(column=1, row=2, sticky=tk.E)
         ttk.Label(search_frame, text="results found.").grid(column=2, row=2, sticky=(tk.W, tk.E))
 
-        ttk.Button(search_frame, text="Advanced Search", command=self.advancedsearch).grid(column = 2, row=3, sticky=(tk.W, tk.E))
+        ttk.Button(search_frame, text="Advanced Search", command=lambda: n.select(adv_search_frame)).grid(column = 2, row=3, sticky=(tk.W, tk.E))
         for child in search_frame.winfo_children():
             child.grid_configure(padx=5, pady=5)
         search_frame.columnconfigure(2, weight=1)
+
+        ## Advanced Search frame
+
+        self.srch_manufacturer = tk.StringVar()
+        self.srch_type = tk.StringVar()
+
+
+        ttk.Label(adv_search_frame, text="DTp Number").grid(row=1, column=1, sticky=(tk.W, tk.E))
+        ttk.Entry(adv_search_frame, width=8, textvariable=self.dtp_input).grid(row=1, column=2, sticky=(tk.W, tk.E))
+        ttk.Label(adv_search_frame, text="Manufacturer").grid(row=2, column=1, sticky=(tk.W, tk.E))
+        ttk.Entry(adv_search_frame, width=20, textvariable=self.srch_manufacturer).grid(row=2, column=2, sticky=(tk.W, tk.E))
+        ttk.Label(adv_search_frame, text="Type").grid(row=3, column=1, sticky=(tk.W, tk.E))
+        ttk.Combobox(adv_search_frame, textvariable=self.srch_type, state="readonly", values=self.typedesc).grid(row=3, column=2, sticky=(tk.W, tk.E))
+
+
+        ttk.Button(adv_search_frame, text="Search", command=self.advancedsearch).grid(row=20, column=2, sticky=(tk.W, tk.E))
 
         ## Results frame
 
@@ -120,20 +152,22 @@ class DTP_UI:
         results_frame.columnconfigure(2, weight=3)
 
         # Connect to the DB
-        dtp_database.db_connect()
+        dtp.db_connect()
 
     def result_prev(self, *args):
-        if(self.result_index > 0):
-            self.result_index -= 1
+        if(int(self.resultcount.get()) > 0):
+            if(self.result_index > 0):
+                self.result_index -= 1
 
-        self.result_update()
+                self.result_update(*args)
         return
 
     def result_next(self, *args):
-        if(self.result_index < (int(self.resultcount.get()) - 1)):
-            self.result_index += 1
+        if(int(self.resultcount.get()) > 0):
+            if(self.result_index < (int(self.resultcount.get()) - 1)):
+                self.result_index += 1
 
-        self.result_update(*args)
+                self.result_update(*args)
         return
 
     def result_update(self, *args):
@@ -149,33 +183,56 @@ class DTP_UI:
         global result_ax5_disp
         global result_brk_rtn
         global index_disp
-        found = self.db_results[self.result_index]
-        result_dtp_disp.set(found["DTP_Number"])
-        result_make_disp.set(found["Make"])
-        result_type_disp.set(found["Type"])
-        result_gvw_disp.set(found["GVWDesign"])
-        if(found["GTWDesign"]):
-            result_gtw_disp.set(found["GTWDesign"])
+        if(int(self.resultcount.get()) > 0):
+            found = self.db_results[self.result_index]
+            result_dtp_disp.set(found["DTP_Number"])
+            result_make_disp.set(found["Make"])
+            result_type_disp.set(found["Type"])
+            result_gvw_disp.set(found["GVWDesign"])
+            if(found["GTWDesign"]):
+                result_gtw_disp.set(found["GTWDesign"])
+            else:
+                result_gtw_disp.set("")
+            result_ax1_disp.set(str(found["Axle1Weight"]))
+            result_ax2_disp.set(str(found["Axle2Weight"]))
+            result_ax3_disp.set(str(found["Axle3Weight"]) if(found["Axle3Weight"]) else "")
+            result_ax4_disp.set(str(found["Axle4Weight"]) if(found["Axle4Weight"]) else "")
+            result_ax5_disp.set(str(found["Axle5Weight"]) if(found["Axle5Weight"]) else "")
+
+            result_brk_rtn.set(found["BrakeRoutine"])
+
+            index_disp.set(str(self.result_index + 1) + " of " + self.resultcount.get())
         else:
+            # Cleanup time!
+            result_dtp_disp.set("")
+            result_make_disp.set("")
+            result_type_disp.set("")
+            result_gvw_disp.set("")
             result_gtw_disp.set("")
-        result_ax1_disp.set(str(found["Axle1Weight"]))
-        result_ax2_disp.set(str(found["Axle2Weight"]))
-        result_ax3_disp.set(str(found["Axle3Weight"]) if(found["Axle3Weight"]) else "")
-        result_ax4_disp.set(str(found["Axle4Weight"]) if(found["Axle4Weight"]) else "")
-        result_ax5_disp.set(str(found["Axle5Weight"]) if(found["Axle5Weight"]) else "")
-
-        result_brk_rtn.set(found["BrakeRoutine"])
-
-        index_disp.set(str(self.result_index + 1) + " of " + self.resultcount.get())
+            result_ax1_disp.set("")
+            result_ax2_disp.set("")
+            result_ax3_disp.set("")
+            result_ax4_disp.set("")
+            result_ax5_disp.set("")
+            result_brk_rtn.set("")
+            index_disp.set("No Records")
+            self.result_index = 0
         return
 
     def dtp_numsearch(self, *args):
-        results = dtp_database.dtp_get(self.dtp_input.get())
+        self.result_index = 0 # Clear our previous results
+        results = dtp.dtp_get(self.dtp_input.get())
         self.resultcount.set(len(results))
         self.db_results = results
+        self.result_update(*args)
 
     def advancedsearch(self, *args):
-        # do nothing right now
+        typexs = self.srch_type.get()
+        typecode = ''
+
+        if (len(typexs) > 0):
+            typecode = self.typecodes[self.typedesc.index(typexs)]
+            print("Would check for a " + self.srch_type.get() + ". Which is a: " + typecode)
         return
 
     def dtp_ui_quit(self, *args):
@@ -189,9 +246,10 @@ class DTP_UI:
 
         dlg = tk.Toplevel(root_win)
         dlg.title("About dtp-base")
-        ttk.Label(dlg, text="dtp-base").grid(row=1, column=2)
-        ttk.Label(dlg, text="For searching the DVSA's brake roller test procedure database.\nWritten by Tamber <tamber@furryhelix.co.uk>").grid(row=2, column=1, columnspan=3)
-        ttk.Button(dlg, text="Ok", command=dismiss).grid(row=3, column=2)
+        ttk.Label(dlg, text="dtp-base: For searching through the DVSA's brake roller test procedure database.\nWritten by Tamber <tamber@furryhelix.co.uk>").grid(row=2, column=1, columnspan=3)
+        ttk.Label(dlg, text="DTP Database version:").grid(row=3, column=1)
+        ttk.Label(dlg, text=dtp.db_version()[0]).grid(row=3, column=2)
+        ttk.Button(dlg, text="Ok", command=dismiss).grid(row=4, column=2)
         dlg.protocol("WM_DELETE_WINDOW", dismiss)
         dlg.transient(root_win)
         dlg.wait_visibility()
