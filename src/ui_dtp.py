@@ -28,13 +28,20 @@ class DTP_UI:
         global result_dtp_disp
         global result_make_disp
         global result_type_disp
+        global result_abs_disp
+        global result_lsv_disp
         global result_gvw_disp
         global result_gtw_disp
         global result_ax1_disp
+        global result_ax1_mod
         global result_ax2_disp
+        global result_ax2_mod
         global result_ax3_disp
+        global result_ax3_mod
         global result_ax4_disp
+        global result_ax4_mod
         global result_ax5_disp
+        global result_ax5_mod
         global result_brk_rtn_srv
         global result_brk_typ_srv
         global result_brk_rtn_sec
@@ -79,6 +86,8 @@ class DTP_UI:
         result_dtp_disp = tk.StringVar()
         result_make_disp = tk.StringVar()
         result_type_disp = tk.StringVar()
+        result_abs_disp = tk.StringVar()
+        result_lsv_disp = tk.StringVar()
         result_gvw_disp = tk.StringVar()
         result_gtw_disp = tk.StringVar()
         result_ax1_disp = tk.StringVar()
@@ -86,6 +95,11 @@ class DTP_UI:
         result_ax3_disp = tk.StringVar()
         result_ax4_disp = tk.StringVar()
         result_ax5_disp = tk.StringVar()
+        result_ax1_mod = tk.StringVar()
+        result_ax2_mod = tk.StringVar()
+        result_ax3_mod = tk.StringVar()
+        result_ax4_mod = tk.StringVar()
+        result_ax5_mod = tk.StringVar()
         result_brk_rtn_srv = tk.StringVar()
         result_brk_typ_srv = tk.StringVar()
         result_brk_rtn_sec = tk.StringVar()
@@ -149,8 +163,10 @@ class DTP_UI:
         ttk.Label(results_frame, relief='sunken', width=8, textvariable=result_dtp_disp).grid(row=1, column=2, columnspan=2, sticky=tk.W)
         ttk.Label(results_frame, text='Make').grid(row=2, column=1, sticky=tk.E)
         ttk.Label(results_frame, relief='sunken', width=20, textvariable=result_make_disp).grid(row=2, column=2, columnspan=2, sticky=tk.W)
+        ttk.Label(results_frame, relief='sunken', width=4, textvariable=result_abs_disp).grid(row=2, column=4, sticky=tk.W)
         ttk.Label(results_frame, text='Type').grid(row=3, column=1, sticky=tk.E)
         ttk.Label(results_frame, relief='sunken', width=20, textvariable=result_type_disp).grid(row=3, column=2, columnspan=2, sticky=tk.W)
+        ttk.Label(results_frame, relief='sunken', width=4, textvariable=result_lsv_disp).grid(row=3, column=4, sticky=tk.W)
         ttk.Label(results_frame, text='GVW (kg)').grid(row=4, column=1, sticky=tk.E)
         ttk.Label(results_frame, relief='sunken', width=8, textvariable=result_gvw_disp).grid(row=4, column=2, columnspan=2, sticky=tk.W)
 
@@ -159,14 +175,19 @@ class DTP_UI:
 
         ttk.Label(results_frame, text='Axle 1 (kg)').grid(row=5, column=1, sticky=tk.E)
         ttk.Label(results_frame, relief='sunken', width=8, textvariable=result_ax1_disp).grid(row=5, column=2, columnspan=2, sticky=tk.W)
+        ttk.Label(results_frame, relief='sunken', width=10, textvariable=result_ax1_mod).grid(row=5, column=3, sticky=tk.W)
         ttk.Label(results_frame, text='Axle 2 (kg)').grid(row=6, column=1, sticky=tk.E)
         ttk.Label(results_frame, relief='sunken', width=8, textvariable=result_ax2_disp).grid(row=6, column=2, columnspan=2, sticky=tk.W)
+        ttk.Label(results_frame, relief='sunken', width=10, textvariable=result_ax2_mod).grid(row=6, column=3, sticky=tk.W)
         ttk.Label(results_frame, text='Axle 3 (kg)').grid(row=7, column=1, sticky=tk.E)
         ttk.Label(results_frame, relief='sunken', width=8, textvariable=result_ax3_disp).grid(row=7, column=2, sticky=tk.W)
+        ttk.Label(results_frame, relief='sunken', width=10, textvariable=result_ax3_mod).grid(row=7, column=3, sticky=tk.W)
         ttk.Label(results_frame, text='Axle 4 (kg)').grid(row=8, column=1, sticky=tk.E)
         ttk.Label(results_frame, relief='sunken', width=8, textvariable=result_ax4_disp).grid(row=8, column=2, sticky=tk.W)
+        ttk.Label(results_frame, relief='sunken', width=10, textvariable=result_ax4_mod).grid(row=8, column=3, sticky=tk.W)
         ttk.Label(results_frame, text='Axle 5 (kg)').grid(row=9, column=1, sticky=tk.E)
         ttk.Label(results_frame, relief='sunken', width=8, textvariable=result_ax5_disp).grid(row=9, column=2, sticky=tk.W)
+        ttk.Label(results_frame, relief='sunken', width=10, textvariable=result_ax5_mod).grid(row=9, column=3, sticky=tk.W)
 
         ttk.Label(results_frame, text='Brake Routine').grid(row=10, column=2, sticky=tk.W)
         ttk.Label(results_frame, text='Brake Type').grid(row=10, column=3, sticky=tk.E)
@@ -218,13 +239,20 @@ class DTP_UI:
         global result_dtp_disp
         global result_make_disp
         global result_type_disp
+        global result_abs_disp
+        global result_lsv_disp
         global result_gvw_disp
         global result_gtw_disp
         global result_ax1_disp
+        global result_ax1_mod
         global result_ax2_disp
+        global result_ax2_mod
         global result_ax3_disp
+        global result_ax3_mod
         global result_ax4_disp
+        global result_ax4_mod
         global result_ax5_disp
+        global result_ax5_mod
         global result_brk_rtn_srv
         global result_brk_typ_srv
         global result_brk_rtn_sec
@@ -237,17 +265,24 @@ class DTP_UI:
             found = self.db_results[self.result_index]
             result_dtp_disp.set(found["DTP_Number"])
             result_make_disp.set(found["Make"])
+            result_abs_disp.set('ABS' if(found["ABSFitted"] == 'Yes') else "")
             result_type_disp.set(found["Type"])
+            result_lsv_disp.set('LSV' if(found["LSVFitted"] == 'Yes') else "")
             result_gvw_disp.set(found["GVWDesign"])
             if(found["GTWDesign"]):
                 result_gtw_disp.set(found["GTWDesign"])
             else:
                 result_gtw_disp.set("")
             result_ax1_disp.set(str(found["Axle1Weight"]))
+            result_ax1_mod.set('Modulated' if(found["Axle1Modulation"] == 'Yes') else "")
             result_ax2_disp.set(str(found["Axle2Weight"]))
+            result_ax2_mod.set('Modulated' if(found["Axle2Modulation"] == 'Yes') else "")
             result_ax3_disp.set(str(found["Axle3Weight"]) if(found["Axle3Weight"]) else "")
+            result_ax3_mod.set('Modulated' if(found["Axle3Modulation"] == 'Yes') else "")
             result_ax4_disp.set(str(found["Axle4Weight"]) if(found["Axle4Weight"]) else "")
+            result_ax4_mod.set('Modulated' if(found["Axle4Modulation"] == 'Yes') else "")
             result_ax5_disp.set(str(found["Axle5Weight"]) if(found["Axle5Weight"]) else "")
+            result_ax5_mod.set('Modulated' if(found["Axle5Modulation"] == 'Yes') else "")
 
             result_brk_rtn_srv.set(found["BrakeRoutine"][0])
             result_brk_typ_srv.set(found["ServiceType"])
@@ -265,10 +300,15 @@ class DTP_UI:
             result_gvw_disp.set("")
             result_gtw_disp.set("")
             result_ax1_disp.set("")
+            result_ax1_mod.set("")
             result_ax2_disp.set("")
+            result_ax2_mod.set("")
             result_ax3_disp.set("")
+            result_ax3_mod.set("")
             result_ax4_disp.set("")
+            result_ax4_mod.set("")
             result_ax5_disp.set("")
+            result_ax5_mod.set("")
             result_brk_rtn_srv.set("")
             result_brk_typ_srv.set("")
             result_brk_rtn_sec.set("")
