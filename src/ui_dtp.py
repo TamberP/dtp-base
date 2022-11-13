@@ -119,6 +119,7 @@ class DTP_UI:
         self.srch_manufacturer = tk.StringVar()
         self.srch_type = tk.StringVar()
         self.srch_gvw = tk.StringVar()
+        self.srch_gtw = tk.StringVar()
 
 
         ttk.Label(adv_search_frame, text="Manufacturer").grid(row=2, column=1, sticky=(tk.W, tk.E))
@@ -129,6 +130,9 @@ class DTP_UI:
         ttk.Combobox(adv_search_frame, textvariable=self.srch_type, state="readonly", values=self.typedesc).grid(row=3, column=2, sticky=(tk.W, tk.E))
         ttk.Label(adv_search_frame, text="GVW (kg)").grid(row=4, column=1, sticky=(tk.W, tk.E))
         ttk.Entry(adv_search_frame, width=20, textvariable=self.srch_gvw).grid(row=4, column=2, sticky=(tk.W, tk.E))
+
+        ttk.Label(adv_search_frame, text="GTW (kg)").grid(row=5, column=1, sticky=(tk.W, tk.E))
+        ttk.Entry(adv_search_frame, width=20, textvariable=self.srch_gtw).grid(row=5, column=2, sticky=(tk.W, tk.E))
 
         ttk.Label(adv_search_frame, textvariable=self.resultcount).grid(row=19, column=1, sticky=tk.E)
         ttk.Label(adv_search_frame, text="results found.").grid(row=19, column=2, sticky=(tk.W, tk.E))
@@ -300,6 +304,10 @@ class DTP_UI:
         if(len(self.srch_gvw.get()) > 0):
             weight = int(self.srch_gvw.get())
             query.WHERE(str('GVW_DesignWeight=' + str(weight/10)))
+
+        if(len(self.srch_gtw.get()) > 0):
+            trainWeight = int(self.srch_gtw.get())
+            query.WHERE(str('GTW_DesignWeight=' + str(trainWeight/10)))
 
         tmp = dtp.db_curs.execute(str(query)).fetchall()
         results = []
