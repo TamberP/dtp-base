@@ -77,8 +77,6 @@ class DTP_UI:
         n = ttk.Notebook(root_frame)
         search_frame=ttk.Frame(n)
         n.add(search_frame, text='Search')
-        adv_search_frame=ttk.Frame(n)
-        n.add(adv_search_frame, text='Advanced Search')
         results_frame=ttk.Frame(n)
         n.add(results_frame, text='Results')
         n.grid(sticky='nsew')
@@ -116,46 +114,43 @@ class DTP_UI:
         dtp_entry = ttk.Entry(search_frame, width=8, textvariable=self.dtp_input)
         dtp_entry.grid(column=2, row=1, sticky=(tk.W, tk.E))
 
-        ttk.Button(search_frame, text="Go", command=self.dtp_numsearch).grid(column=3, row=1, sticky=tk.W)
+        ttk.Button(search_frame, text="Search", command=self.dtp_numsearch).grid(column=2, row=2, sticky=tk.W)
 
         self.resultcount=tk.StringVar()
         self.resultcount.set("0")
-        ttk.Label(search_frame, textvariable=self.resultcount).grid(column=1, row=2, sticky=tk.E)
-        ttk.Label(search_frame, text="results found.").grid(column=2, row=2, sticky=(tk.W, tk.E))
-
-        ttk.Button(search_frame, text="Advanced Search", command=lambda: n.select(adv_search_frame)).grid(column = 2, row=3, sticky=(tk.W, tk.E))
-        for child in search_frame.winfo_children():
-            child.grid_configure(padx=5, pady=5)
-        search_frame.columnconfigure(2, weight=1)
-
-        ## Advanced Search frame
 
         self.srch_manufacturer = tk.StringVar()
         self.srch_type = tk.StringVar()
         self.srch_gvw = tk.StringVar()
         self.srch_gtw = tk.StringVar()
 
+        ttk.Label(search_frame, textvariable=self.resultcount).grid(row=3, column=1, sticky=tk.E)
+        ttk.Label(search_frame, text="results found.").grid(row=3, column=2, sticky=(tk.W, tk.E))
 
-        ttk.Label(adv_search_frame, text="Manufacturer").grid(row=2, column=1, sticky=(tk.W, tk.E))
-        self.manufcombo = ttk.Combobox(adv_search_frame, width=20, textvariable=self.srch_manufacturer, state="readonly",
+
+        ttk.Separator(search_frame, orient=tk.HORIZONTAL).grid(row=4, columnspan=4, sticky=(tk.W, tk.E))
+        ttk.Label(search_frame, text="Advanced Search").grid(row=5, column=1, columnspan=4)
+
+        ttk.Label(search_frame, text="Manufacturer").grid(row=6, column=1, sticky=(tk.W, tk.E))
+        self.manufcombo = ttk.Combobox(search_frame, width=20, textvariable=self.srch_manufacturer, state="readonly",
                      postcommand = self.update_manuflist)
-        self.manufcombo.grid(row=2, column=2, sticky=(tk.W, tk.E))
-        ttk.Label(adv_search_frame, text="Type").grid(row=3, column=1, sticky=(tk.W, tk.E))
-        ttk.Combobox(adv_search_frame, textvariable=self.srch_type, state="readonly", values=self.typedesc).grid(row=3, column=2, sticky=(tk.W, tk.E))
-        ttk.Label(adv_search_frame, text="GVW (kg)").grid(row=4, column=1, sticky=(tk.W, tk.E))
-        ttk.Entry(adv_search_frame, width=20, textvariable=self.srch_gvw).grid(row=4, column=2, sticky=(tk.W, tk.E))
+        self.manufcombo.grid(row=6, column=2, sticky=(tk.W, tk.E))
+        ttk.Label(search_frame, text="Type").grid(row=7, column=1, sticky=(tk.W, tk.E))
+        ttk.Combobox(search_frame, textvariable=self.srch_type, state="readonly", values=self.typedesc).grid(row=7, column=2, sticky=(tk.W, tk.E))
+        ttk.Label(search_frame, text="GVW (kg)").grid(row=8, column=1, sticky=(tk.W, tk.E))
+        ttk.Entry(search_frame, width=20, textvariable=self.srch_gvw).grid(row=8, column=2, sticky=(tk.W, tk.E))
 
-        ttk.Label(adv_search_frame, text="GTW (kg)").grid(row=5, column=1, sticky=(tk.W, tk.E))
-        ttk.Entry(adv_search_frame, width=20, textvariable=self.srch_gtw).grid(row=5, column=2, sticky=(tk.W, tk.E))
+        ttk.Label(search_frame, text="GTW (kg)").grid(row=9, column=1, sticky=(tk.W, tk.E))
+        ttk.Entry(search_frame, width=20, textvariable=self.srch_gtw).grid(row=9, column=2, sticky=(tk.W, tk.E))
 
-        ttk.Label(adv_search_frame, textvariable=self.resultcount).grid(row=19, column=1, sticky=tk.E)
-        ttk.Label(adv_search_frame, text="results found.").grid(row=19, column=2, sticky=(tk.W, tk.E))
+        ttk.Label(search_frame, textvariable=self.resultcount).grid(row=19, column=1, sticky=tk.E)
+        ttk.Label(search_frame, text="results found.").grid(row=19, column=2, sticky=(tk.W, tk.E))
 
-        ttk.Button(adv_search_frame, text="Search", command=self.advancedsearch).grid(row=20, column=2, sticky=(tk.W, tk.E))
+        ttk.Button(search_frame, text="Search", command=self.advancedsearch).grid(row=20, column=2, sticky=tk.W)
 
-        for child in adv_search_frame.winfo_children():
+        for child in search_frame.winfo_children():
             child.grid_configure(padx=5, pady=5)
-        adv_search_frame.columnconfigure(2, weight=1)
+        search_frame.columnconfigure(2, weight=1)
 
         ## Results frame
 
