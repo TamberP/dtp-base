@@ -140,7 +140,7 @@ def dtp_rowparse(raw):
         testdata["DTP_Number"] = raw["DTpNumber"]
         testdata["Make"] = vehMake(raw["MakeId"])
         testdata["Type"] = vehType(raw["TypeId"])
-        testdata["Suffixes"] = dtp_suffixes(raw["DuplicateID"]) if (raw["DuplicateID"] is not None) else ''
+        testdata["Suffixes"] = raw["DuplicateID"] if (raw["DuplicateID"] is not None) else ''
         testdata["Second_Front_Axle_Steer"] = 'Yes' if(raw["SecFrontAxleSteered"] == 1) else 'No'
         testdata["Trans_Sec_Park_Brake"] = 'Yes' if(raw["TransSecParkBrake"] == 1) else 'No'
         testdata["Secondary_only_Tractor"] = 'Yes' if(raw["SecBrakeOnlyOnTrac"] == 1) else 'No'

@@ -26,6 +26,7 @@ class DTP_UI:
 
     def __init__(self, root_win):
         global result_dtp_disp
+        global result_dtp_suffix
         global result_make_disp
         global result_type_disp
         global result_abs_disp
@@ -82,6 +83,7 @@ class DTP_UI:
         n.grid(sticky='nsew')
 
         result_dtp_disp = tk.StringVar()
+        result_dtp_suffix = tk.StringVar()
         result_make_disp = tk.StringVar()
         result_type_disp = tk.StringVar()
         result_abs_disp = tk.StringVar()
@@ -147,6 +149,7 @@ class DTP_UI:
         ttk.Label(search_frame, text="results found.").grid(row=19, column=2, sticky=(tk.W, tk.E))
 
         ttk.Button(search_frame, text="Search", command=self.advancedsearch).grid(row=20, column=2, sticky=tk.W)
+        ttk.Button(search_frame, text="Reset", command=self.advsrchreset).grid(row=20, column=3, sticky=tk.E)
 
         for child in search_frame.winfo_children():
             child.grid_configure(padx=5, pady=5)
@@ -156,6 +159,7 @@ class DTP_UI:
 
         ttk.Label(results_frame, text='DTP No.').grid(row=1, column=1, sticky=tk.E)
         ttk.Label(results_frame, relief='sunken', width=8, textvariable=result_dtp_disp).grid(row=1, column=2, columnspan=2, sticky=tk.W)
+        ttk.Label(results_frame, relief='sunken', width=4, textvariable=result_dtp_suffix).grid(row=1, column=4, sticky=tk.W)
         ttk.Label(results_frame, text='Make').grid(row=2, column=1, sticky=tk.E)
         ttk.Label(results_frame, relief='sunken', width=20, textvariable=result_make_disp).grid(row=2, column=2, columnspan=2, sticky=tk.W)
         ttk.Label(results_frame, relief='sunken', width=4, textvariable=result_abs_disp).grid(row=2, column=4, sticky=tk.W)
@@ -232,6 +236,7 @@ class DTP_UI:
 
     def result_update(self, *args):
         global result_dtp_disp
+        global result_dtp_suffix
         global result_make_disp
         global result_type_disp
         global result_abs_disp
@@ -259,6 +264,7 @@ class DTP_UI:
         if(int(self.resultcount.get()) > 0):
             found = self.db_results[self.result_index]
             result_dtp_disp.set(found["DTP_Number"])
+            result_dtp_suffix.set(found["Suffixes"])
             result_make_disp.set(found["Make"])
             result_abs_disp.set('ABS' if(found["ABSFitted"] == 'Yes') else "")
             result_type_disp.set(found["Type"])
@@ -353,6 +359,12 @@ class DTP_UI:
         self.resultcount.set(len(results))
         self.result_update(*args)
         return
+
+    def advsrchreset(self, *args):
+        self.srch_manufacturer.set("")
+        self.srch_type.set("")
+        self.srch_gvw.set("")
+        self.srch_gtw.set("")
 
     def dtp_ui_quit(self, *args):
         root_win.destroy()
