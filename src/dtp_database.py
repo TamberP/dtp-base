@@ -33,6 +33,14 @@ def get_vehMakes(makes, ids):
             ids.append(row[0])
     return
 
+def get_brakeTypes(types, ids):
+    tmp = db_curs.execute("SELECT * FROM braktype ORDER BY TypeId;").fetchall()
+    if(tmp is not None):
+        for row in tmp:
+            types.append(row[1])
+            ids.append(row[0])
+    return
+
 # Given a vehicle type ID, return the human-readable vehicle type
 def vehType(typeid):
     row = db_curs.execute("SELECT Type FROM VehType WHERE TypeId=(?);", (typeid,)).fetchone()

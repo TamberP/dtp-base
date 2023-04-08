@@ -24,6 +24,9 @@ class DTP_UI:
     vehmakes = []
     vehmakes_ids = []
 
+    braketypes = []
+    braketypes_ids = []
+
     def __init__(self, root_win):
         global result_dtp_disp
         global result_dtp_suffix
@@ -125,6 +128,9 @@ class DTP_UI:
         self.srch_type = tk.StringVar()
         self.srch_gvw = tk.StringVar()
         self.srch_gtw = tk.StringVar()
+        self.srch_srvbrk = tk.StringVar()
+        self.srch_secbrk = tk.StringVar()
+        self.srch_prkbrk = tk.StringVar()
 
         ttk.Label(search_frame, textvariable=self.resultcount).grid(row=3, column=1, sticky=tk.E)
         ttk.Label(search_frame, text="results found.").grid(row=3, column=2, sticky=(tk.W, tk.E))
@@ -144,6 +150,21 @@ class DTP_UI:
 
         ttk.Label(search_frame, text="GTW (kg)").grid(row=9, column=1, sticky=(tk.W, tk.E))
         ttk.Entry(search_frame, width=20, textvariable=self.srch_gtw).grid(row=9, column=2, sticky=(tk.W, tk.E))
+
+        ttk.Label(search_frame, text="Service Brake Type").grid(row=10, column=1, sticky=(tk.W, tk.E))
+        self.srvbrktype = ttk.Combobox(search_frame, width=20, textvariable=self.srch_srvbrk, state="readonly",
+                                       postcommand = self.update_braketype)
+        self.srvbrktype.grid(row=10, column=2, sticky=(tk.W, tk.E))
+
+        ttk.Label(search_frame, text="Secondary Brake Type").grid(row=11, column=1, sticky=(tk.W, tk.E))
+        self.secbrktype = ttk.Combobox(search_frame, width=20, textvariable=self.srch_secbrk, state="readonly",
+                                       postcommand = self.update_braketype)
+        self.secbrktype.grid(row=11, column=2, sticky=(tk.W, tk.E))
+
+        ttk.Label(search_frame, text="Parking Brake Type").grid(row=12, column=1, sticky=(tk.W, tk.E))
+        self.prkbrktype = ttk.Combobox(search_frame, width=20, textvariable=self.srch_prkbrk, state="readonly",
+                                       postcommand = self.update_braketype)
+        self.prkbrktype.grid(row=12, column=2, sticky=(tk.W, tk.E))
 
         ttk.Label(search_frame, textvariable=self.resultcount).grid(row=19, column=1, sticky=tk.E)
         ttk.Label(search_frame, text="results found.").grid(row=19, column=2, sticky=(tk.W, tk.E))
@@ -217,21 +238,25 @@ class DTP_UI:
         # Connect to the DB
         dtp.db_connect()
         dtp.get_vehMakes(self.vehmakes, self.vehmakes_ids)
+        dtp.get_brakeTypes(self.braketypes, self.braketypes_ids)
 
     def result_prev(self, *args):
         if(int(self.resultcount.get()) > 0):
             if(self.result_index > 0):
                 self.result_index -= 1
-
-                self.result_update(*args)
+            else:
+                self.result_index = int(self.resultcount.get()) - 1
+            self.result_update(*args)
         return
 
     def result_next(self, *args):
         if(int(self.resultcount.get()) > 0):
             if(self.result_index < (int(self.resultcount.get()) - 1)):
                 self.result_index += 1
+            else:
+                self.result_index = 0
 
-                self.result_update(*args)
+            self.result_update(*args)
         return
 
     def result_update(self, *args):
@@ -328,6 +353,7 @@ class DTP_UI:
         self.result_update(*args)
 
     def advancedsearch(self, *args):
+        self.result_index = 0
         typexs = self.srch_type.get()
         typecode = ''
         manufid = ''
@@ -350,6 +376,14 @@ class DTP_UI:
             trainWeight = int(self.srch_gtw.get())
             query.WHERE(str('GTW_DesignWeight=' + str(trainWeight/10)))
 
+        if(len(self.srch_srvbrk.get()) > 0):
+            brakeType = str(self.braketypes.index(self.srch_srvbrk.get()))
+            query.WHERE(str('FoundServBrake=' + str(self.braketypes_ids[self.braketypes.index(self.srch_srvbrk.get())])))
+
+        if(len(self.srch_prkbrk.get()) > 0):
+            brakeType = str(self.braketypes.index(self.srch_prkbrk.get()))
+            query.WHERE(str('FoundParkBrake=' + str(self.braketypes_ids[self.braketypes.index(self.srch_prkbrk.get())])))
+
         tmp = dtp.db_curs.execute(str(query)).fetchall()
         results = []
         for row in tmp:
@@ -365,6 +399,9 @@ class DTP_UI:
         self.srch_type.set("")
         self.srch_gvw.set("")
         self.srch_gtw.set("")
+        self.srch_srvbrk.set("")
+        self.srch_secbrk.set("")
+        self.srch_prkbrk.set("")
 
     def dtp_ui_quit(self, *args):
         root_win.destroy()
@@ -415,6 +452,11 @@ class DTP_UI:
 
     def update_manuflist(self):
         self.manufcombo['values'] = self.vehmakes
+
+    def update_braketype(self):
+        self.srvbrktype['values'] = self.braketypes
+        self.secbrktype['values'] = self.braketypes
+        self.prkbrktype['values'] = self.braketypes
 
 if __name__ == "__main__":
     root_win = tk.Tk()
