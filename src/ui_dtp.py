@@ -402,6 +402,7 @@ class DTP_UI:
         self.srch_srvbrk.set("")
         self.srch_secbrk.set("")
         self.srch_prkbrk.set("")
+        self.dtp_input.set("")
 
     def dtp_ui_quit(self, *args):
         root_win.destroy()
