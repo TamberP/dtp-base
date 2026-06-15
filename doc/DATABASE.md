@@ -271,23 +271,109 @@ this. Wanna bet I fuck it up first time, and make a big mess?
 
 ## Trailer Numbering System
 
-A system is in place to allow the identification of draw-bar trailers
-and semi-trailers, whether single or multi axle, and -- for draw-bar
-trailers -- whether it's a full draw-bar or a centre-axle draw-bar.
+Trailer Dtp numbers are 6 characters that identify all the details
+required in order to carry out a trailer brake-test, and are
+entered as `ABCDEF`, but constructed as follows:
 
-The code also encodes the Gross Vehicle Weight except where it's a
-semi-trailer in which case it encodes a reference into a separate set
-of files because semi-trailers make things more complicated.
+### Character A
+Identifies type of trailer:
+- 1: Single axle semi-trailer
+- 2: Twin axle semi-trailer
+- 3: Tri axle semi-trailer
+- 4: Four axle semi-trailer
+- 5: Single axle, centre-axle draw-bar (think caravan-style)
+- 6: Twin axle, centre-axle draw-bar
+- 7: Tri-axle, centre-axle draw-bar
+- 8: Twin axle full draw-bar
+- 9: Tri axle full draw-bar
+- 0: Four axle full draw-bar
 
-It *also* encodes whether the trailer has load-sensing valves,
-anti-lock brakes, or electronic brake systems. Oh, and whether or not
-the trailer is type approved.
+### Characters B, C, D
 
-The separate set of files list the GVW of the trailer, in ranges of
-250kg; design axle weights; total axle weight of the bogie (Which,
-when the trailer is coupled, is the GVW minus the weight being
-supported by the tractor unit.), and a reference number for the
-routine.
+Numeric and identify the GVW of the trailer. Except it's not that easy!
+
+#### Draw-Bar Trailer
+
+This applies to both types of draw-bar trailer, and the GVW is entered
+as the GVW/100, rounded up to the next whole number as necessary.
+
+If the GVW is less than 10,000kg, a leading zero must be used. e.g. a
+9750kg GVW trailer would be shown as: **098**.
+(That is: 9750/100 = 97.5. Rounded to 98, and a leading 0 added.)
+
+#### Semi-Trailers
+
+This is where it all goes to shit. A coupled semi-trailer only needs
+to handle the weight on its bogie, the kingpin weight being taken by
+the unit (which is assumed to be able to handle that); but when
+uncoupled, its parking brake needs to control the entire weight of the
+trailer.
+
+This is not possible to account for in 3 digits, and so it isn't. The
+number given here for a semi-trailer is a reference into the
+additional database files `1atrl.dta`, `2atrl.dta`, `3atrl.dta` and
+`4atrl.dta`.
+
+### Character E
+
+Alphanumeric, identifies the axles with park brake. Follows the same
+form as with HGVs, except for the option `0`.
+
+### Character F
+
+Numeric, identifies what load-sensing/anti-lock/etc features are
+fitted, and whether the trailer is type-approved.
+
+| Value | LSV | ABS | EBS | Type Approved |
+|:-----:|:---:|:---:|:---:|:-------------:|
+|   0   |  X  |  X  |  X  |       X       |
+|   1   |  X  |  X  |  X  |      Yes      |
+|   2   |  X  | Yes |  X  |       X       |
+|   3   |  X  | Yes |  X  |      Yes      |
+|   4   | Yes |  X  |  X  |       X       |
+|   5   | Yes |  X  |  X  |      Yes      |
+|   6   | Yes | Yes |  X  |       X       |
+|   7   | Yes | Yes |  X  |      Yes      |
+|   8   |  X  |  X  | Yes |       X       |
+
+## The Trailer ATRL files
+
+### 1atrl.dta
+
+Comprises 5 fields, all numeric. Field 3 is blank.
+
+- **Field 1**: 5 character numeric field. Gives GVW of trailer, grouped in 250kg
+ ranges.  e.g. all trailers with GVW between 16250kg and 16499kg are
+ given as `16250`. GVWs of less than 10,000kg do not have a leading
+ zero.
+
+- **Field 2**: 5 character numeric field, gives the design axle weight of the
+  single axle, grouped in ranges of 100kg. Again, leading zeros are
+  not shown.
+
+- **Field 3**: Blank.
+
+- **Field 4**: 5 character numeric field, giving the total axle weight of the
+  bogie. (This is going to be the same as field 2, for a single axle
+  trailer.)
+
+- **Field 5**: 3 character numeric code, relating to characters B, C, and D of the
+  Dtp Trailer Brake Reference Number.
+
+### 2, 3, 4atrl.dta
+
+These comprise 9 numeric fields, but varying fields are blank, just to
+fuck you up.
+
+- **Field 1**: Same as in `1atrl.dta`
+- **Field 2**: Same as for `1atrl.dta`
+- **Field 3**: Design axle weight of 2nd axle. Format same as that for Field 2.
+- **Field 4**: Design axle weight of 3rd axle.
+- **Field 5**: Design axle weight of 4th axle.
+- **Field 6**: Blank
+- **Field 7**: Blank
+- **Field 8**: 5 character numeric, gives total axle weight of bogie. (Sum of fields 2, 3, 4, and 5)
+- **Field 9**: 3 character numeric code, as in `1atrl.dta`'s field 5.
 
 ## Public Service Vehicle Number System
 
