@@ -183,3 +183,115 @@ def dtp_rowparse(raw):
         return testdata
     else:
         return None
+
+def dtp_rowparse_trailer(raw):
+    if(raw is not None):
+        testdata = {}
+        testdata["DTP_Number"] = raw["DTpNumber"]
+        # We'd parse out some stuff from the dtp number here but that's wonky in the DB
+        testdata["Type"]        = "Trailer"
+        testdata["GVWDesign"]   = raw["GVWDesign"]
+        testdata["Axle1Weight"] = raw["Axle1Weight"]
+        testdata["Axle2Weight"] = raw["Axle2Weight"]
+        testdata["Axle3Weight"] = raw["Axle3Weight"]
+        testdata["Axle4Weight"] = raw["Axle4Weight"]
+        testdata["Axle5Weight"] = raw["Axle5Weight"]
+        testdata["AxleWeightTotal"]   = raw["TotalAxleWeight"]
+
+        testdata["ABSFitted"] = "DTP"
+        testdata["ABSOption"] = ""
+
+        testdata["LSVFitted"] = "DTP"
+        testdata["LSVOption"] = ""
+
+        testdata["BrakeRoutine"] = ["", "", ""]
+        testdata["SplitRoutine"] = "NONE"
+
+        # Fields that are not applicable to trailers
+        testdata["Suffixes"] = ""
+        testdata["Second_Front_Axle_Steer"] = ""
+        testdata["Trans_Sec_Park_Brake"] = ""
+        testdata["Secondary_only_Tractor"] = ""
+        testdata["PrePriorPost68"] = ""
+        testdata["DoubleDrive"] = ""
+        testdata["ThirdDiff"] = ""
+        testdata["ParkOnDiff"] = ""
+        testdata["ServBrakeDist"] = ""
+        testdata["ServiceType"] = ""
+        testdata["SecondaryType"] = ""
+        testdata["ParkType"] = ""
+
+        return testdata
+    else:
+        return None
+
+def dtp_parse_trailer(dtp):
+    if(dtp is not None):
+        trailer = {}
+        # Char A: type of trailer
+        match dtp[0]:
+            case '1':
+                trailer["Type"] = '1S'
+            case '2':
+                trailer["Type"] = '2S'
+            case '3':
+                trailer["Type"] = '3S'
+            case '4':
+                trailer["Type"] = '4S'
+            case '5':
+                trailer["Type"] = '1C'
+            case '6':
+                trailer["Type"] = '2C'
+            case '7':
+                trailer["Type"] = '3C'
+            case '8':
+                trailer["Type"] = '2D'
+            case '9':
+                trailer["Type"] = '3D'
+            case '0':
+                trailer["Type"] = '4D'
+
+        # Char B, C, D: GVW except if it's a semi-trailer
+        if(trailer["Type"][1] != 'S'):
+            trailer["GVW"] = str(int(dtp[1:3]) * 100)
+        else:
+            trailer["GVW"] = '' # Semi-trailers just have references to the additional database files.
+            ## TODO, etc.
+
+        # Char E: Which axles have park-brake
+        trailer["BrakeRoutine"] = ["", "", dtp[4]]
+
+        # Char F: what LSV/ABS features/is trailer type approved?
+        trailer["LSV"] = 'No'
+        trailer["ABS"] = 'No'
+        trailer["EBS"] = 'No'
+        trailer["TypeAppr"] = 'No'
+
+        match dtp[5]:
+            case '0':
+                # Nothing to do
+                trailer["TypeAppr"] = 'No'  # shush
+            case '1':
+                trailer["TypeAppr"] = 'Yes'
+            case '2':
+                trailer["ABS"]      = 'Yes'
+            case '3':
+                trailer["ABS"]      = 'Yes'
+                trailer["TypeAppr"] = 'Yes'
+            case '4':
+                trailer["LSV"]      = 'Yes'
+            case '5':
+                trailer["LSV"]      = 'Yes'
+                trailer["TypeAppr"] = 'Yes'
+            case '6':
+                trailer["LSV"]      = 'Yes'
+                trailer["ABS"]      = 'Yes'
+            case '7':
+                trailer["LSV"]      = 'Yes'
+                trailer["ABS"]      = 'Yes'
+                trailer["TypeAppr"] = 'Yes'
+            case '8':
+                trailer["EBS"]      = 'Yes'
+            case _:
+                # How the fuck did you get here?
+                warn("Incorrect character '9' at position 6 of Trailer DTP")

@@ -5,6 +5,7 @@ import tkinter.ttk as ttk
 import dtp_database as dtp
 import _sql_utils as sql
 import webbrowser as web
+import re
 
 class DTP_UI:
     result_index = 0
@@ -288,34 +289,59 @@ class DTP_UI:
 
         if(int(self.resultcount.get()) > 0):
             found = self.db_results[self.result_index]
-            result_dtp_disp.set(found["DTP_Number"])
-            result_dtp_suffix.set(found["Suffixes"])
-            result_make_disp.set(found["Make"])
-            result_abs_disp.set('ABS' if(found["ABSFitted"] == 'Yes') else "")
-            result_type_disp.set(found["Type"])
-            result_lsv_disp.set('LSV' if(found["LSVFitted"] == 'Yes') else "")
-            result_gvw_disp.set(found["GVWDesign"])
-            if(found["GTWDesign"]):
-                result_gtw_disp.set(found["GTWDesign"])
+            if(found["Type"] == "Trailer"):
+                result_dtp_disp.set(found["DTP_Number"])
+                result_dtp_suffix.set("")
+                result_make_disp.set("")
+                result_abs_disp.set(found["ABSFitted"]);
+                result_lsv_disp.set(found["LSVFitted"]);
+                result_gvw_disp.set(found["GVWDesign"])
+                result_ax1_disp.set(str(found["Axle1Weight"]))
+                result_ax1_mod.set("")
+                result_ax2_disp.set(str(found["Axle2Weight"]))
+                result_ax2_mod.set("")
+                result_ax3_disp.set(str(found["Axle3Weight"]))
+                result_ax3_mod.set("")
+                result_ax4_disp.set(str(found["Axle4Weight"]))
+                result_ax4_mod.set("")
+                result_ax5_disp.set(str(found["Axle5Weight"]))
+                result_ax5_mod.set("")
+                result_gtw_disp.set(str(found["AxleWeightTotal"]))
+                result_brk_rtn_srv.set(found["BrakeRoutine"][0])
+                result_brk_typ_srv.set("")
+                result_brk_rtn_sec.set(found["BrakeRoutine"][1])
+                result_brk_typ_sec.set("")
+                result_brk_rtn_park.set(found["BrakeRoutine"][2])
+                result_brk_typ_park.set("")
             else:
-                result_gtw_disp.set("")
-            result_ax1_disp.set(str(found["Axle1Weight"]))
-            result_ax1_mod.set('Modulated' if(found["Axle1Modulation"] == 'Yes') else "")
-            result_ax2_disp.set(str(found["Axle2Weight"]))
-            result_ax2_mod.set('Modulated' if(found["Axle2Modulation"] == 'Yes') else "")
-            result_ax3_disp.set(str(found["Axle3Weight"]) if(found["Axle3Weight"]) else "")
-            result_ax3_mod.set('Modulated' if(found["Axle3Modulation"] == 'Yes') else "")
-            result_ax4_disp.set(str(found["Axle4Weight"]) if(found["Axle4Weight"]) else "")
-            result_ax4_mod.set('Modulated' if(found["Axle4Modulation"] == 'Yes') else "")
-            result_ax5_disp.set(str(found["Axle5Weight"]) if(found["Axle5Weight"]) else "")
-            result_ax5_mod.set('Modulated' if(found["Axle5Modulation"] == 'Yes') else "")
+                result_dtp_disp.set(found["DTP_Number"])
+                result_dtp_suffix.set(found["Suffixes"])
+                result_make_disp.set(found["Make"])
+                result_abs_disp.set('ABS' if(found["ABSFitted"] == 'Yes') else "")
+                result_type_disp.set(found["Type"])
+                result_lsv_disp.set('LSV' if(found["LSVFitted"] == 'Yes') else "")
+                result_gvw_disp.set(found["GVWDesign"])
+                if(found["GTWDesign"]):
+                    result_gtw_disp.set(found["GTWDesign"])
+                else:
+                    result_gtw_disp.set("")
+                result_ax1_disp.set(str(found["Axle1Weight"]))
+                result_ax1_mod.set('Modulated' if(found["Axle1Modulation"] == 'Yes') else "")
+                result_ax2_disp.set(str(found["Axle2Weight"]))
+                result_ax2_mod.set('Modulated' if(found["Axle2Modulation"] == 'Yes') else "")
+                result_ax3_disp.set(str(found["Axle3Weight"]) if(found["Axle3Weight"]) else "")
+                result_ax3_mod.set('Modulated' if(found["Axle3Modulation"] == 'Yes') else "")
+                result_ax4_disp.set(str(found["Axle4Weight"]) if(found["Axle4Weight"]) else "")
+                result_ax4_mod.set('Modulated' if(found["Axle4Modulation"] == 'Yes') else "")
+                result_ax5_disp.set(str(found["Axle5Weight"]) if(found["Axle5Weight"]) else "")
+                result_ax5_mod.set('Modulated' if(found["Axle5Modulation"] == 'Yes') else "")
 
-            result_brk_rtn_srv.set(found["BrakeRoutine"][0])
-            result_brk_typ_srv.set(found["ServiceType"])
-            result_brk_rtn_sec.set(found["BrakeRoutine"][1])
-            result_brk_typ_sec.set(found["SecondaryType"])
-            result_brk_rtn_park.set(found["BrakeRoutine"][2])
-            result_brk_typ_park.set(found["ParkType"])
+                result_brk_rtn_srv.set(found["BrakeRoutine"][0])
+                result_brk_typ_srv.set(found["ServiceType"])
+                result_brk_rtn_sec.set(found["BrakeRoutine"][1])
+                result_brk_typ_sec.set(found["SecondaryType"])
+                result_brk_rtn_park.set(found["BrakeRoutine"][2])
+                result_brk_typ_park.set(found["ParkType"])
 
             index_disp.set(str(self.result_index + 1) + " of " + self.resultcount.get())
         else:
@@ -345,6 +371,7 @@ class DTP_UI:
             self.result_index = 0
         return
 
+
     def dtp_numsearch(self, *args):
         self.result_index = 0 # Clear our previous results
         results = dtp.dtp_get(self.dtp_input.get())
@@ -357,37 +384,50 @@ class DTP_UI:
         typexs = self.srch_type.get()
         typecode = ''
         manufid = ''
-        query = sql.Query()
-        query.FROM('Master').SELECT('*')
-
-        if (len(typexs) > 0):
+        if(len(typexs)> 0):
             typecode = self.typecodes[self.typedesc.index(typexs)]
-            query.WHERE(str('TypeId="' + typecode + '"'))
 
-        if (len(self.srch_manufacturer.get()) > 0):
-            manufid = str(self.vehmakes_ids[self.vehmakes.index(self.srch_manufacturer.get())])
-            query.WHERE(str('MakeId="' + manufid + '"'))
+        query = sql.Query()
 
-        if(len(self.srch_gvw.get()) > 0):
-            weight = int(self.srch_gvw.get())
-            query.WHERE(str('GVW_DesignWeight=' + str(weight/10)))
+        if(len(typecode) > 0 and re.match("[1234][CDS]", typecode)):
+            # Trailer
+            query.FROM('TrailerWeights').SELECT('*').WHERE(str('NrAxles=' + str(typecode[0])))
+            tmp = dtp.db_curs.execute(str(query)).fetchall()
+            results = []
+            for row in tmp:
+                results.append(dtp.dtp_rowparse_trailer(row))
 
-        if(len(self.srch_gtw.get()) > 0):
-            trainWeight = int(self.srch_gtw.get())
-            query.WHERE(str('GTW_DesignWeight=' + str(trainWeight/10)))
+        else:
+            # Truck
+            query.FROM('Master').SELECT('*')
 
-        if(len(self.srch_srvbrk.get()) > 0):
-            brakeType = str(self.braketypes.index(self.srch_srvbrk.get()))
-            query.WHERE(str('FoundServBrake=' + str(self.braketypes_ids[self.braketypes.index(self.srch_srvbrk.get())])))
+            if (len(typexs) > 0):
+                query.WHERE(str('TypeId="' + typecode + '"'))
 
-        if(len(self.srch_prkbrk.get()) > 0):
-            brakeType = str(self.braketypes.index(self.srch_prkbrk.get()))
-            query.WHERE(str('FoundParkBrake=' + str(self.braketypes_ids[self.braketypes.index(self.srch_prkbrk.get())])))
+                if (len(self.srch_manufacturer.get()) > 0):
+                    manufid = str(self.vehmakes_ids[self.vehmakes.index(self.srch_manufacturer.get())])
+                    query.WHERE(str('MakeId="' + manufid + '"'))
 
-        tmp = dtp.db_curs.execute(str(query)).fetchall()
-        results = []
-        for row in tmp:
-            results.append(dtp.dtp_rowparse(row))
+                if(len(self.srch_gvw.get()) > 0):
+                    weight = int(self.srch_gvw.get())
+                    query.WHERE(str('GVW_DesignWeight=' + str(weight/10)))
+
+                if(len(self.srch_gtw.get()) > 0):
+                    trainWeight = int(self.srch_gtw.get())
+                    query.WHERE(str('GTW_DesignWeight=' + str(trainWeight/10)))
+
+                if(len(self.srch_srvbrk.get()) > 0):
+                    brakeType = str(self.braketypes.index(self.srch_srvbrk.get()))
+                    query.WHERE(str('FoundServBrake=' + str(self.braketypes_ids[self.braketypes.index(self.srch_srvbrk.get())])))
+
+                if(len(self.srch_prkbrk.get()) > 0):
+                    brakeType = str(self.braketypes.index(self.srch_prkbrk.get()))
+                    query.WHERE(str('FoundParkBrake=' + str(self.braketypes_ids[self.braketypes.index(self.srch_prkbrk.get())])))
+
+            tmp = dtp.db_curs.execute(str(query)).fetchall()
+            results = []
+            for row in tmp:
+                results.append(dtp.dtp_rowparse(row))
 
         self.db_results = results
         self.resultcount.set(len(results))
