@@ -317,7 +317,27 @@ additional database files `1atrl.dta`, `2atrl.dta`, `3atrl.dta` and
 ### Character E
 
 Alphanumeric, identifies the axles with park brake. Follows the same
-form as with HGVs, except for the option `0`.
+form as with HGVs, except for the option `0`:
+
+(Very helpfully, the HGV-PSV RBT Spec -- at least, as of the March
+2011 revision -- does not specify what they mean by "with the
+exception of 0 (Zero)". Presumably, that there's no park on any axles?)
+
+- 1: Axle 1
+- 2: Axle 2
+- 3: Axles 1 + 2
+- 4: Axle 3
+- 5: Axles 1 + 3
+- 6: Axles 2 + 3
+- 7: Axles 1 + 2 + 3
+- 8: Axle 4
+- 9: Axles 1 + 4
+- A: Axles 2 + 4
+- B: Axles 1 + 2 + 4
+- C: Axles 3 + 4
+- D: Axles 1 + 3 + 4
+- E: Axles 2 + 3 + 4
+- F: Axles 1 + 2 + 3 + 4
 
 ### Character F
 
