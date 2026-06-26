@@ -677,6 +677,7 @@ class DTP_UI:
 
         trailer = dtp.dtp_parse_trailer(tdtp)
         if trailer is not None:
+            tresult_dtp_disp.set(tdtp)
             axlecount = int(trailer["Type"][0])
             tresult_type_disp.set(self.typedesc[self.typecodes.index(trailer["Type"])])
             tresult_gvw_disp.set(trailer["GVW"])
