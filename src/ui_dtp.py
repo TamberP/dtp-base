@@ -9,6 +9,7 @@ import re
 
 class DTP_UI:
     result_index = 0
+    tresult_index = 0
 
     # TODO: Populate these from the DB instead. Not high priority, they're unlikely to change.
     typecodes = ('', '1C', '1D', '1S', '24', '25', '27', '2C', '2D', '2L', '2P', '2R', '2S', '2T',
@@ -56,6 +57,25 @@ class DTP_UI:
         global index_disp
         global srch_type
 
+        # and now all the same again but for trailers instead
+        global tresult_dtp_disp
+        global tresult_type_disp
+        global tresult_gvw_disp
+        global tresult_taw_disp
+        global tresult_ax1_disp
+        global tresult_ax1_park
+        global tresult_ax2_disp
+        global tresult_ax2_park
+        global tresult_ax3_disp
+        global tresult_ax3_park
+        global tresult_ax4_disp
+        global tresult_ax4_park
+        global tresult_abs_disp
+        global tresult_ebs_disp
+        global tresult_lsv_disp
+        global tresult_typapp_disp
+        global tindex_disp
+
         root_win.title("dtp-base")
         menubar = tk.Menu(root_win)
         root_win['menu'] = menubar
@@ -81,9 +101,13 @@ class DTP_UI:
 
         n = ttk.Notebook(root_frame)
         search_frame=ttk.Frame(n)
-        n.add(search_frame, text='Search')
+        n.add(search_frame, text='Truck Search')
         results_frame=ttk.Frame(n)
-        n.add(results_frame, text='Results')
+        n.add(results_frame, text='Truck Results')
+        trailer_frame=ttk.Frame(n)
+        n.add(trailer_frame, text='Trailer Search')
+        trailer_r_frame=ttk.Frame(n)
+        n.add(trailer_r_frame, text='Trailer Results')
         n.grid(sticky='nsew')
 
         result_dtp_disp = tk.StringVar()
@@ -112,7 +136,28 @@ class DTP_UI:
         result_brk_typ_park = tk.StringVar()
         index_disp = tk.StringVar()
 
-        ## Search frame
+        tresult_dtp_disp = tk.StringVar()
+        tresult_type_disp = tk.StringVar()
+        tresult_gvw_disp = tk.StringVar()
+        tresult_taw_disp = tk.StringVar()
+        tresult_kpin_disp = tk.StringVar()
+        tresult_ax1_disp = tk.StringVar()
+        tresult_ax1_park = tk.StringVar()
+        tresult_ax2_disp = tk.StringVar()
+        tresult_ax2_park = tk.StringVar()
+        tresult_ax3_disp = tk.StringVar()
+        tresult_ax3_park = tk.StringVar()
+        tresult_ax4_disp = tk.StringVar()
+        tresult_ax4_park = tk.StringVar()
+        tresult_abs_disp = tk.StringVar()
+        tresult_ebs_disp = tk.StringVar()
+        tresult_lsv_disp = tk.StringVar()
+        tresult_typapp_disp = tk.StringVar()
+        tindex_disp = tk.StringVar()
+
+                       ########################
+                       #     Search frame     #
+                       ########################
 
         ttk.Label(search_frame, text="DTp Number:").grid(column=1, row=1, sticky=(tk.W, tk.E))
 
@@ -177,7 +222,9 @@ class DTP_UI:
             child.grid_configure(padx=5, pady=5)
         search_frame.columnconfigure(2, weight=1)
 
-        ## Results frame
+                       ########################
+                       #     Results frame    #
+                       ########################
 
         ttk.Label(results_frame, text='DTP No.').grid(row=1, column=1, sticky=tk.E)
         ttk.Label(results_frame, relief='sunken', width=8, textvariable=result_dtp_disp).grid(row=1, column=2, columnspan=2, sticky=tk.W)
@@ -236,6 +283,110 @@ class DTP_UI:
         results_frame.columnconfigure(1, weight=1)
         results_frame.columnconfigure(2, weight=3)
 
+                       ########################
+                       #     Trailer Frame    #
+                       ########################
+
+        ttk.Label(trailer_frame, text="DTp Number:").grid(column=1, row=1, sticky=(tk.W, tk.E))
+        self.trailer_dtp_input=tk.StringVar()
+        trailer_dtp_entry = ttk.Entry(trailer_frame, width=8, textvariable=self.trailer_dtp_input)
+        trailer_dtp_entry.grid(column = 2, row=1, sticky=(tk.W, tk.E))
+
+        ttk.Button(trailer_frame, text="Search",
+                   command=self.dtp_trailer_numsearch).grid(column=2, row=2, sticky=tk.W)
+
+        for child in trailer_frame.winfo_children():
+            child.grid_configure(padx = 5, pady = 5)
+
+        trailer_frame.columnconfigure(1, weight=1)
+        trailer_frame.columnconfigure(2, weight=3)
+
+
+                       ########################
+                       #   Trailer Results    #
+                       ########################
+
+        ttk.Label(trailer_r_frame, text="DTP No.:").grid(row=1, column=1, sticky=tk.E)
+        ttk.Label(trailer_r_frame, relief='sunken', width=8, textvariable=tresult_dtp_disp).grid(row=1,
+                                                                                                 column=2,
+                                                                                                 columnspan=2,
+                                                                                                 sticky=tk.W)
+
+        ttk.Label(trailer_r_frame, text="Type:").grid(row=2, column=1, sticky=tk.E)
+        ttk.Label(trailer_r_frame, relief='sunken', width=3, textvariable=tresult_type_disp).grid(row=2,
+                                                                                                  column=2,
+                                                                                                  columnspan=2,
+                                                                                                  sticky=(tk.E, tk.W))
+
+        ttk.Label(trailer_r_frame, text="GVW (kg):").grid(row=3, column=1, sticky=tk.E)
+        ttk.Label(trailer_r_frame, relief='sunken', width=8, textvariable=tresult_gvw_disp).grid(row=3,
+                                                                                                 column=2,
+                                                                                                 columnspan=2,
+                                                                                                 sticky=tk.W)
+
+        self.trailer_taw_lbl=ttk.Label(trailer_r_frame, text="TAW (kg):")
+        self.trailer_taw_lbl.grid(row=4, column=1, sticky=tk.E)
+        ttk.Label(trailer_r_frame, relief='sunken', width=8, textvariable=tresult_taw_disp).grid(row=4,
+                                                                                                   column=2,
+                                                                                                   sticky=tk.W)
+
+        self.trailer_kpw_lbl=ttk.Label(trailer_r_frame, text="Kingpin Weight (kg):")
+        self.trailer_kpw_lbl.grid(row=4, column=3, sticky=tk.E)
+        ttk.Label(trailer_r_frame, relief='sunken', width=8, textvariable=tresult_kpin_disp).grid(row=4,
+                                                                                                  column=4,
+                                                                                                  sticky=tk.W)
+
+        ttk.Label(trailer_r_frame, relief='sunken', width=8, textvariable=tresult_abs_disp).grid(row=5, column=1,
+                                                                                                 sticky=tk.E)
+        ttk.Label(trailer_r_frame, relief='sunken', width=8, textvariable=tresult_ebs_disp).grid(row=5, column=2,
+                                                                                                 sticky=tk.E)
+        ttk.Label(trailer_r_frame, relief='sunken', width=8, textvariable=tresult_lsv_disp).grid(row=5, column=3,
+                                                                                                 sticky=tk.E)
+        ttk.Label(trailer_r_frame, relief='sunken', width=15, textvariable=tresult_typapp_disp).grid(row=5, column=4,
+                                                                                                     sticky=tk.E)
+
+        ttk.Separator(trailer_r_frame, orient=tk.HORIZONTAL).grid(row=6, columnspan=5, sticky=(tk.W, tk.E))
+
+        ttk.Label(trailer_r_frame, text="Axle 1 (kg):").grid(row=7, column=1, sticky=tk.E)
+        ttk.Label(trailer_r_frame, relief='sunken', width=8, textvariable=tresult_ax1_disp).grid(row=7,
+                                                                                                 column=2,
+                                                                                                 sticky=tk.W)
+        ttk.Label(trailer_r_frame, relief='sunken', width=3, textvariable=tresult_ax1_park).grid(row=7,
+                                                                                                 column=3)
+
+        ttk.Label(trailer_r_frame, text="Axle 2 (kg):").grid(row=8, column=1, sticky=tk.E)
+        ttk.Label(trailer_r_frame, relief='sunken', width=8, textvariable=tresult_ax2_disp).grid(row=8,
+                                                                                                 column=2,
+                                                                                                 sticky=tk.W)
+        ttk.Label(trailer_r_frame, relief='sunken', width=3, textvariable=tresult_ax2_park).grid(row=8,
+                                                                                                 column=3)
+
+        ttk.Label(trailer_r_frame, text="Axle 3 (kg):").grid(row=9, column=1, sticky=tk.E)
+        ttk.Label(trailer_r_frame, relief='sunken', width=8, textvariable=tresult_ax3_disp).grid(row=9,
+                                                                                                 column=2,
+                                                                                                 sticky=tk.W)
+        ttk.Label(trailer_r_frame, relief='sunken', width=3, textvariable=tresult_ax3_park).grid(row=9,
+                                                                                                 column=3)
+
+        ttk.Label(trailer_r_frame, text="Axle 4 (kg):").grid(row=10, column=1, sticky=tk.E)
+        ttk.Label(trailer_r_frame, relief='sunken', width=8, textvariable=tresult_ax4_disp).grid(row=10,
+                                                                                                 column=2,
+                                                                                                 sticky=tk.W)
+        ttk.Label(trailer_r_frame, relief='sunken', width=3, textvariable=tresult_ax4_park).grid(row=10,
+                                                                                                 column=3)
+
+
+        trailer_prev_butt = ttk.Button(trailer_r_frame, text="Previous", command=self.tresult_prev).grid(column=1, row=20, sticky=tk.W)
+        ttk.Label(trailer_r_frame, textvariable=index_disp).grid(row=20, column=2)
+        trailer_next_butt = ttk.Button(trailer_r_frame, text="Next", command=self.tresult_next).grid(column=3, row=20, sticky=tk.E)
+
+        for child in trailer_r_frame.winfo_children():
+            child.grid_configure(padx = 5, pady = 5)
+
+        trailer_r_frame.columnconfigure(1, weight=1)
+        trailer_r_frame.columnconfigure(2, weight=1)
+        trailer_r_frame.columnconfigure(4, weight=3)
+
         # Connect to the DB
         dtp.db_connect()
         dtp.get_vehMakes(self.vehmakes, self.vehmakes_ids)
@@ -258,6 +409,25 @@ class DTP_UI:
                 self.result_index = 0
 
             self.result_update(*args)
+        return
+
+    def tresult_prev(self, *args):
+        if(int(self.tresultcount.get()) > 0):
+            if(self.tresult_index > 0):
+                self.tresult_index -= 1
+            else:
+                self.tresult_index = int(self.tresultcount.get()) - 1
+            self.tresult_update(*args)
+        return
+
+    def tresult_next(self, *args):
+        if(int(self.tresultcount.get()) > 0):
+            if(self.result_index < (int(self.tresultcount.get()) - 1)):
+                self.tresult_index += 1
+            else:
+                self.tresult_index = 0
+
+            self.tresult_update(*args)
         return
 
     def result_update(self, *args):
@@ -443,6 +613,105 @@ class DTP_UI:
         self.srch_secbrk.set("")
         self.srch_prkbrk.set("")
         self.dtp_input.set("")
+
+    def trailersrchreset(self, *args):
+        global tresult_dtp_disp
+        global tresult_type_disp
+        global tresult_gvw_disp
+        global tresult_taw_disp
+        global tresult_ax1_disp
+        global tresult_ax1_park
+        global tresult_ax2_disp
+        global tresult_ax2_park
+        global tresult_ax3_disp
+        global tresult_ax3_park
+        global tresult_ax4_disp
+        global tresult_ax4_park
+        global tresult_abs_disp
+        global tresult_ebs_disp
+        global tresult_lsv_disp
+        global tresult_typapp_disp
+
+        self.tresult_index = 0
+
+        tresult_dtp_disp.set("")
+        tresult_gvw_disp.set("")
+        tresult_taw_disp.set("")
+        tresult_ax1_disp.set("")
+        tresult_ax2_disp.set("")
+        tresult_ax3_disp.set("")
+        tresult_ax4_disp.set("")
+        tresult_ax1_park.set("")
+        tresult_ax2_park.set("")
+        tresult_ax3_park.set("")
+        tresult_ax4_park.set("")
+        tresult_type_disp.set("")
+        tresult_abs_disp.set("")
+        tresult_lsv_disp.set("")
+        tresult_typapp_disp.set("")
+        tresult_ebs_disp.set("")
+
+    def dtp_trailer_numsearch(self, *args):
+        global tresult_dtp_disp
+        global tresult_type_disp
+        global tresult_gvw_disp
+        global tresult_taw_disp
+        global tresult_ax1_disp
+        global tresult_ax1_park
+        global tresult_ax2_disp
+        global tresult_ax2_park
+        global tresult_ax3_disp
+        global tresult_ax3_park
+        global tresult_ax4_disp
+        global tresult_ax4_park
+        global tresult_abs_disp
+        global tresult_ebs_disp
+        global tresult_lsv_disp
+        global tresult_typapp_disp
+
+        self.trailersrchreset(*args)
+
+        ## Next: Check given trailer DTP for validity,
+        ## then work through it working out type, etc.
+        tdtp = self.trailer_dtp_input.get()
+
+        trailer = dtp.dtp_parse_trailer(tdtp)
+        if trailer is not None:
+            axlecount = int(trailer["Type"][0])
+            tresult_type_disp.set(self.typedesc[self.typecodes.index(trailer["Type"])])
+            tresult_gvw_disp.set(trailer["GVW"])
+            if(trailer["TAW"]):
+                self.trailer_taw_lbl.config(state="enabled")
+                self.trailer_kpw_lbl.config(state="enabled")
+                tresult_taw_disp.set(trailer["TAW"])
+            else:
+                self.trailer_taw_lbl.config(state="disabled")
+                self.trailer_kpw_lbl.config(state="disabled")
+                tresult_taw_disp.set("")
+
+
+            tresult_ax1_disp.set("XX")
+            tresult_ax1_park.set(trailer["Park"][0])
+
+            if(axlecount > 1):
+                tresult_ax2_disp.set("XX")
+                tresult_ax2_park.set(trailer["Park"][1])
+
+            if(axlecount > 2):
+                tresult_ax3_disp.set("XX")
+                tresult_ax3_park.set(trailer["Park"][2])
+
+            if(axlecount > 3):
+                tresult_ax4_disp.set("XX")
+                tresult_ax4_park.set(trailer["Park"][3])
+
+            tresult_abs_disp.set("ABS") if(trailer["ABS"] == "Yes") else tresult_abs_disp.set("")
+            tresult_ebs_disp.set("EBS") if(trailer["EBS"] == "Yes") else tresult_ebs_disp.set("")
+            tresult_lsv_disp.set("LSV") if(trailer["LSV"] == "Yes") else tresult_lsv_disp.set("")
+            tresult_typapp_disp.set("Type Approved") if(trailer["TypeAppr"] == "Yes") else tresult_typapp_disp.set("")
+        else:
+            print("Wah!")
+
 
     def dtp_ui_quit(self, *args):
         root_win.destroy()

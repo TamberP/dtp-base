@@ -225,7 +225,7 @@ def dtp_rowparse_trailer(raw):
     else:
         return None
 
-def dtp_parse_trailer(dtp):
+def dtp_parse_trailer(dtp):  ## Todo: Better error handling/raising
     if(dtp is not None):
         trailer = {}
         # Char A: type of trailer
@@ -253,13 +253,75 @@ def dtp_parse_trailer(dtp):
 
         # Char B, C, D: GVW except if it's a semi-trailer
         if(trailer["Type"][1] != 'S'):
-            trailer["GVW"] = str(int(dtp[1:3]) * 100)
+            trailer["GVW"] = str(int(dtp[1:4]) * 100)
+            trailer["TAW"] = None # drawbar trailers have all their weight on their bogie, so it's the same as GVW.
         else:
-            trailer["GVW"] = '' # Semi-trailers just have references to the additional database files.
-            ## TODO, etc.
+            trailer["GVW"] = 'DB' # Semi-trailers just have references to the additional database files.
+            trailer["TAW"] = "Some"
 
         # Char E: Which axles have park-brake
-        trailer["BrakeRoutine"] = ["", "", dtp[4]]
+        parkaxles = ''
+        match dtp[4]:
+            case '1':
+                trailer["Park"] = ["P", " ", " ", " "]
+            case '2':
+                if(int(trailer["Type"][0]) < 2):
+                    return None
+                trailer["Park"] = [" ", "P", " ", " "]
+            case '3':
+                if(int(trailer["Type"][0]) < 2):
+                    return None
+                trailer["Park"] = ["P", "P", " ", " "]
+            case '4':
+                if(int(trailer["Type"][0]) < 3):
+                    return None
+                trailer["Park"] = [" ", " ", "P", " "]
+            case '5':
+                if(int(trailer["Type"][0]) < 3):
+                    return None
+                trailer["Park"] = ["P", " ", "P", " "]
+            case '6':
+                if(int(trailer["Type"][0]) < 3):
+                    return None
+                trailer["Park"] = [" ", "P", "P", " "]
+            case '7':
+                if(int(trailer["Type"][0]) < 3):
+                    return None
+                trailer["Park"] = ["P", "P", "P", " "]
+            case '8':
+                if(int(trailer["Type"][0]) < 4):
+                    return None
+                trailer["Park"] = [" ", " ", " ", "P"]
+            case '9':
+                if(int(trailer["Type"][0]) < 4):
+                    return None
+                trailer["Park"] = ["P", " ", " ", "P"]
+            case 'A':
+                if(int(trailer["Type"][0]) < 4):
+                    return None
+                trailer["Park"] = [" ", "P", " ", "P"]
+            case 'B':
+                if(int(trailer["Type"][0]) < 4):
+                    return None
+                trailer["Park"] = ["P", "P", " ", "P"]
+            case 'C':
+                if(int(trailer["Type"][0]) < 4):
+                    return None
+                trailer["Park"] = [" ", " ", "P", "P"]
+            case 'D':
+                if(int(trailer["Type"][0]) < 4):
+                    return None
+                trailer["Park"] = ["P", " ", "P", "P"]
+            case 'E':
+                if(int(trailer["Type"][0]) < 4):
+                    return None
+                trailer["Park"] = [" ", "P", "P", "P"]
+            case 'F':
+                if(int(trailer["Type"][0]) < 4):
+                    return None
+                trailer["Park"] = ["P", "P", "P", "P"]
+            case _:
+                trailer["Park"] = dtp[4]
 
         # Char F: what LSV/ABS features/is trailer type approved?
         trailer["LSV"] = 'No'
@@ -294,4 +356,7 @@ def dtp_parse_trailer(dtp):
                 trailer["EBS"]      = 'Yes'
             case _:
                 # How the fuck did you get here?
-                warn("Incorrect character '9' at position 6 of Trailer DTP")
+                print("Incorrect character '{0}' at position 6 of Trailer DTP".format(dtp[5]))
+                return None
+
+        return trailer
